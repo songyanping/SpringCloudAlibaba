@@ -2,20 +2,21 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="spring-cloud-alibaba-skywalking" />
-        <module name="spring-cloud-alibaba-nacos-config" />
-        <module name="spring-cloud-alibaba-consumer" />
         <module name="spring-cloud-alibaba-feign" />
+        <module name="spring-cloud-alibaba-nacos-config" />
         <module name="spring-cloud-alibaba-providertwo" />
-        <module name="spring-cloud-alibaba-gateway" />
-        <module name="spring-cloud-alibaba-provider" />
-        <module name="spring-cloud-alibaba-rocketmq-provider" />
         <module name="spring-cloud-alibaba-common" />
+        <module name="spring-cloud-alibaba-skywalking" />
         <module name="spring-cloud-alibaba-rocketmq-consumer" />
+        <module name="spring-cloud-alibaba-provider" />
+        <module name="spring-cloud-alibaba-consumer" />
+        <module name="spring-cloud-alibaba-rocketmq-provider" />
+        <module name="spring-cloud-alibaba-gateway" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

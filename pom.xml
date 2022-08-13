@@ -10,9 +10,9 @@
         <module>spring-cloud-alibaba-provider</module>
         <module>spring-cloud-alibaba-providertwo</module>
         <module>spring-cloud-alibaba-gateway</module>
-        <module>spring-cloud-alibaba-nacos-config</module>
-        <module>spring-cloud-alibaba-rocketmq-consumer</module>
-        <module>spring-cloud-alibaba-rocketmq-provider</module>
+<!--        <module>spring-cloud-alibaba-nacos-config</module>-->
+<!--        <module>spring-cloud-alibaba-rocketmq-consumer</module>-->
+<!--        <module>spring-cloud-alibaba-rocketmq-provider</module>-->
     </modules>
 
     <parent>

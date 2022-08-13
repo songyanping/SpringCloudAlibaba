@@ -40,7 +40,7 @@ public class BgBlogController {
     @GetMapping("list")
     public List<BgBlog> list(){
         System.out.println(2);
-        List<BgBlog> blogs = bgBlogService.queryAllByLimit(1, 10);
+        List<BgBlog> blogs = bgBlogService.queryAllByLimit(0, 2);
         return blogs;
     }
 }

@@ -25,6 +25,7 @@ public class BgBlogController {
      */
     @GetMapping("list")
     public List<BgBlog> list(){
+        System.out.println("consumer......");
         return serviceFeign.list();
     }
 }
