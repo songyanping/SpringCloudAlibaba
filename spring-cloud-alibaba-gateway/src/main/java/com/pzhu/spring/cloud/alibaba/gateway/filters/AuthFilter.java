@@ -26,6 +26,8 @@ public class AuthFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String token = exchange.getRequest().getQueryParams().getFirst("token");
 
+        //暂时允许通过,手动给token赋值
+        token = "pass";
         if (token == null || token.isEmpty()) {
             ServerHttpResponse response = exchange.getResponse();
 

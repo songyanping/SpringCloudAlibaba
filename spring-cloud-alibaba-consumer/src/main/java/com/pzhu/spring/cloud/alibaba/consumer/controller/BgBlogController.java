@@ -28,4 +28,10 @@ public class BgBlogController {
         System.out.println("consumer......");
         return serviceFeign.list();
     }
+
+    @GetMapping("hello")
+    public String hello(){
+        System.out.println("consumer......");
+        return "hehe";
+    }
 }

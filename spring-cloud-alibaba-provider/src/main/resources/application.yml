@@ -2,15 +2,15 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://172.16.233.230:3306/test?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    url: jdbc:mysql://172.16.233.242:3306/test?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
     username: root
-    password: abcde@123
+    password: Devops2019
   application:
     name: nacos-provider
   cloud:
     nacos:
       discovery:
-        server-addr: 172.16.233.230:8848
+        server-addr: 172.16.233.241:8848
 
 server:
   port: 8081
