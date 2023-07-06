@@ -6,8 +6,8 @@ metadata:
 spec:
   workloadSelector:
     labels:
-      app: consumer-v1
-      version: v1
+      app: consumer
+      version: gray
   configPatches:
     - applyTo: HTTP_FILTER
       match:

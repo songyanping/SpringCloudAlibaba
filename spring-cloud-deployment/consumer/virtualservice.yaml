@@ -9,7 +9,22 @@ spec:
   gateways:
   - spring-gateway
   http:
-  - name: consumer-v1
+  - name: canary
+    match:
+    - uri:
+        prefix: "/consumer/"
+      headers:
+        grayid:
+          exact: canary
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: consumer.springboot-cloud.svc.cluster.local
+        port:
+          number: 8083
+        subset: gray
+  - name: default
     match:
       - uri:
           prefix: "/consumer/"
@@ -17,7 +32,7 @@ spec:
       uri: /
     route:
       - destination:
-          host: consumer-v1.springboot-cloud.svc.cluster.local
+          host: consumer.springboot-cloud.svc.cluster.local
           port:
             number: 8083
           subset: v1

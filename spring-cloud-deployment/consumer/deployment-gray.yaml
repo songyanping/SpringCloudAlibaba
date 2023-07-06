@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: consumer-v1
+  name: consumer-gray
   namespace: springboot-cloud
   labels:
     app: consumer
-    version: v1
+    version: gray
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: consumer
-      version: v1
+      version: gray
   template:
     metadata:
       labels:
         app: consumer
-        version: v1
+        version: gray
     spec:
       containers:
       - image: docker.io/song1206/consumer:v1
-        name: consumer-v1
+        name: consumer-gray
         imagePullPolicy: Always
         ports:
         - containerPort: 8083

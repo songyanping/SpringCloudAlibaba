@@ -4,8 +4,11 @@ metadata:
   name: consumer
   namespace: springboot-cloud
 spec:
-  host: consumer-v1.springboot-cloud.svc.cluster.local
+  host: consumer.springboot-cloud.svc.cluster.local
   subsets:
   - name: v1
     labels:
       version: v1
+  - name: gray
+    labels:
+      version: gray
