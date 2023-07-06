@@ -23,7 +23,7 @@ spec:
         name: consumer-v1
         imagePullPolicy: Always
         ports:
-        - containerPort: 8081
+        - containerPort: 8083
 
 
 ---

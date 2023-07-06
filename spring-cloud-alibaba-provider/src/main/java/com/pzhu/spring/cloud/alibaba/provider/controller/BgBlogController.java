@@ -2,8 +2,8 @@ package com.pzhu.spring.cloud.alibaba.provider.controller;
 
 import com.pzhu.spring.cloud.alibaba.common.domain.BgBlog;
 import com.pzhu.spring.cloud.alibaba.provider.service.BgBlogService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import java.util.List;
 
@@ -37,9 +37,12 @@ public class BgBlogController {
      * @return
      */
     @GetMapping("list")
-    public List<BgBlog> list(){
-        System.out.println(1);
-        List<BgBlog> blogs = bgBlogService.queryAllByLimit(0, 1);
+    public List<BgBlog> list(@RequestHeader HttpHeaders headers){
+        System.out.println("provider controller 输出headers......");
+        System.out.println("|--------------begin--------------------|");
+        headers.forEach((key, value) -> System.out.println(key + ": " + value));
+        System.out.println("|--------------end--------------------|");
+        List<BgBlog> blogs = bgBlogService.queryAllByLimit(0, 5);
         return blogs;
     }
 }

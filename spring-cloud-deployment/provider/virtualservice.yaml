@@ -1,0 +1,42 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: provider-vs
+  namespace: springboot-cloud
+spec:
+  hosts:
+    - "*"
+  gateways:
+  - spring-gateway
+  http:
+  - name: canary
+    match:
+    - uri:
+        prefix: "/provider/"
+      headers:
+        grayid:
+          exact: canary
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: provider.springboot-cloud.svc.cluster.local
+        port:
+          number: 8081
+        subset: gray
+      headers:
+        response:
+          add:
+            grayid: "canary"
+  - name: default
+    match:
+      - uri:
+          prefix: "/provider/"
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: provider.springboot-cloud.svc.cluster.local
+        port:
+          number: 8081
+        subset: v1
