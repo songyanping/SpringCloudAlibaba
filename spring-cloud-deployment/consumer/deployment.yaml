@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumer-v1
+  namespace: springboot-cloud
+  labels:
+    app: consumer-v1
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consumer-v1
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: consumer-v1
+        version: v1
+    spec:
+      containers:
+      - image: docker.io/song1206/consumer:v1
+        name: consumer-v1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8081
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: consumer-v1
+  namespace: springboot-cloud
+spec:
+  ports:
+    - port: 8083
+      targetPort: 8083
+  selector:
+    app: consumer-v1
