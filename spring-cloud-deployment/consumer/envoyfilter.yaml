@@ -1,12 +1,13 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
-  name: outbound-header-filter
+  name: consumer-header-filter
   namespace: springboot-cloud
 spec:
   workloadSelector:
     labels:
       app: consumer-v1
+      version: v1
   configPatches:
     - applyTo: HTTP_FILTER
       match:

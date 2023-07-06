@@ -24,10 +24,10 @@ spec:
         port:
           number: 8081
         subset: gray
-      headers:
-        response:
-          add:
-            grayid: "canary"
+#      headers:
+#        response:
+#          add:
+#            grayid: "canary"
   - name: default
     match:
       - uri:

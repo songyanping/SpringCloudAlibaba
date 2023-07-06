@@ -12,7 +12,9 @@ import java.util.List;
  * @Author Guo Huaijian
  * @Date 2020/3/16 16:41
  */
-@FeignClient(value = "nacos-provider",fallback = BgBlogServiceFeignSentinel.class)
+//@FeignClient(value = "nacos-provider",fallback = BgBlogServiceFeignSentinel.class)
+//@FeignClient(url = "172.16.233.240/provider",fallback = BgBlogServiceFeignSentinel.class)
+@FeignClient(value = "provider",url = "http://localhost:8081/",fallback = BgBlogServiceFeignSentinel.class)
 public interface BgBlogServiceFeign {
 
     /**

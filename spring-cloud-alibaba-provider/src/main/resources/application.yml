@@ -10,6 +10,7 @@ spring:
   cloud:
     nacos:
       discovery:
+        enabled: false
         server-addr: 172.16.233.241:8848
 
 server:

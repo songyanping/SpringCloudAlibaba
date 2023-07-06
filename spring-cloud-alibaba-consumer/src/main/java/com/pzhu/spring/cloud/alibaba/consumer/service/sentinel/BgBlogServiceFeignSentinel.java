@@ -18,7 +18,7 @@ public class BgBlogServiceFeignSentinel implements BgBlogServiceFeign {
     public List<BgBlog> list() {
         ArrayList list = new ArrayList<BgBlog>();
         BgBlog blog = new BgBlog();
-        blog.setTitle("hello Sentinel");
+        blog.setTitle("hello Sentinel consumer");
         list.add(blog);
         return list;
     }
