@@ -24,6 +24,12 @@ spec:
         port:
           number: 8081
         subset: gray
+      weight: 100
+    mirror:
+      host: provider.springboot-cloud.svc.cluster.local
+      subset: v1
+    mirrorPercentage:
+      value: 100.0
 #      headers:
 #        response:
 #          add:
@@ -40,3 +46,9 @@ spec:
         port:
           number: 8081
         subset: v1
+      weight: 100
+    mirror:
+      host: provider.springboot-cloud.svc.cluster.local
+      subset: gray
+    mirrorPercentage:
+      value: 100.0

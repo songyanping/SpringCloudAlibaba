@@ -24,6 +24,12 @@ spec:
         port:
           number: 8083
         subset: gray
+      weight: 100
+    mirror:
+      host: consumer.springboot-cloud.svc.cluster.local
+      subset: v1
+    mirrorPercentage:
+      value: 100.0
   - name: default
     match:
       - uri:
@@ -31,8 +37,14 @@ spec:
     rewrite:
       uri: /
     route:
-      - destination:
-          host: consumer.springboot-cloud.svc.cluster.local
-          port:
-            number: 8083
-          subset: v1
+    - destination:
+        host: consumer.springboot-cloud.svc.cluster.local
+        port:
+          number: 8083
+        subset: v1
+      weight: 100
+    mirror:
+      host: consumer.springboot-cloud.svc.cluster.local
+      subset: gray
+    mirrorPercentage:
+      value: 100.0

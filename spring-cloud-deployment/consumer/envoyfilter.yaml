@@ -12,6 +12,12 @@ spec:
     - applyTo: HTTP_FILTER
       match:
         context: SIDECAR_OUTBOUND
+        listener:
+          filterChain:
+            filter:
+              name: envoy.filters.network.http_connection_manager
+              subFilter:
+                name: envoy.filters.http.router
       patch:
         operation: INSERT_BEFORE
         value:
@@ -21,4 +27,8 @@ spec:
             inlineCode: |
               function envoy_on_request(request_handle)
                 request_handle:headers():add("grayid", "canary")
+                request_handle:headers():add("grayid2", "canary22")
+              end
+              function envoy_on_response(response_handle)
+                response_handle:headers():add("test", "from envoy filter response")
               end
