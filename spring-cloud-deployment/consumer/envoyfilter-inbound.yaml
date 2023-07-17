@@ -30,27 +30,40 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
-  name: add-test-header
-  namespace: springboot-cloud
+  name: remove-header-on-retry
+  namespace: springboot-cloud # change this to your namespace
 spec:
   workloadSelector:
     labels:
-      app: provider # change this to your workload labels
+      app: provider
+      version: gray # change this to your workload labels
   configPatches:
     - applyTo: HTTP_FILTER
       match:
-        context: SIDECAR_OUTBOUND
+        context: SIDECAR_INBOUND # match inbound traffic
         listener:
           filterChain:
             filter:
-              name: envoy.http_connection_manager
+              name: "envoy.filters.network.http_connection_manager"
+              subFilter:
+                name: "envoy.filters.http.router"
       patch:
         operation: INSERT_BEFORE
-        value:
-          name: envoy.lua
+        value: # Lua filter configuration
+          name: "envoy.lua"
           typed_config:
             "@type": "type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua"
-            inlineCode: |
+            inlineCode: |-
+              function envoy_on_request(request_handle)
+                local retry_count = request_handle:headers():get("x-envoy-attempt-count") -- get the retry count from envoy header
+                if retry_count and tonumber(retry_count) > 1 then -- if retrying
+                  request_handle:headers():remove("grayid") -- remove bar header
+                end
+              end
+
               function envoy_on_response(response_handle)
-                response_handle:headers():add("test", "test")
+                local retry_count = response_handle:headers():get("x-envoy-attempt-count") -- get the retry count from envoy header
+                if retry_count then -- if exists
+                  response_handle:headers():add("x-retry-count", retry_count) -- add x-retry-count header to response
+                end
               end
