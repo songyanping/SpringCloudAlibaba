@@ -1,0 +1,64 @@
+#apiVersion: networking.istio.io/v1alpha3
+#kind: EnvoyFilter
+#metadata:
+#  name: add-test-header
+#  namespace: springboot-cloud # change this to your namespace
+#spec:
+#  workloadSelector:
+#    labels:
+#      app: provider # change this to your workload labels
+#  configPatches:
+#    - applyTo: HTTP_FILTER
+#      match:
+#        context: SIDECAR_INBOUND # match inbound traffic
+#        listener:
+#          filterChain:
+#            filter:
+#              name: "envoy.filters.network.http_connection_manager"
+#              subFilter:
+#                name: "envoy.filters.http.router"
+#      patch:
+#        operation: INSERT_BEFORE
+#        value: # Lua filter configuration
+#          name: "envoy.lua"
+#          typed_config:
+#            "@type": "type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua"
+#            inlineCode: |-
+#              function envoy_on_response(response_handle)
+#                response_handle:headers():add("test", "test") # add test header
+#              end
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: remove-header-on-retry
+  namespace: springboot-cloud # change this to your namespace
+spec:
+  workloadSelector:
+    labels:
+      app: provider
+      version: gray # change this to your workload labels
+  configPatches:
+    - applyTo: HTTP_FILTER
+      match:
+        context: SIDECAR_INBOUND # match inbound traffic
+        listener:
+          filterChain:
+            filter:
+              name: "envoy.filters.network.http_connection_manager"
+              subFilter:
+                name: "envoy.filters.http.router"
+      patch:
+        operation: INSERT_BEFORE
+        value: # Lua filter configuration
+          name: "envoy.lua"
+          typed_config:
+            "@type": "type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua"
+            inlineCode: |-
+              function envoy_on_response(response_handle)
+                if response_handle:headers():get(":status") == "503" then
+                  response_handle:logInfo("Got status 503, retry request...")
+                  response_handle:headers():replace(":status", "307")
+                  response_handle:headers():add("location", "http://retry-url.com")
+                end
+              end
+

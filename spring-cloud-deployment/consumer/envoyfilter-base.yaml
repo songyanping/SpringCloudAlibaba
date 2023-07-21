@@ -1,13 +1,13 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
-  name: consumer-gray
+  name: consumer-base
   namespace: springboot-cloud
 spec:
   workloadSelector:
     labels:
       app: consumer
-      version: gray
+      version: v1
   configPatches:
     - applyTo: HTTP_FILTER
       match:
@@ -26,6 +26,5 @@ spec:
             '@type': type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
             inlineCode: |
               function envoy_on_request(request_handle)
-                request_handle:headers():add("x-am-canary", "1")
-                
+                request_handle:headers():add("x-am-canary", "0")
               end

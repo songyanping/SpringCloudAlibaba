@@ -14,8 +14,8 @@ spec:
     - uri:
         prefix: "/provider/"
       headers:
-        grayid:
-          exact: canary
+        x-am-canary:
+          exact: "1"
     rewrite:
       uri: /
     route:
@@ -24,20 +24,17 @@ spec:
         port:
           number: 8081
         subset: gray
-      weight: 100
-    mirror:
-      host: provider.springboot-cloud.svc.cluster.local
-      subset: v1
-    mirrorPercentage:
-      value: 100.0
 #      headers:
 #        response:
 #          add:
 #            grayid: "canary"
-  - name: default
+  - name: base
     match:
       - uri:
           prefix: "/provider/"
+        headers:
+          x-am-canary:
+            exact: "0"
     rewrite:
       uri: /
     route:
@@ -46,9 +43,15 @@ spec:
         port:
           number: 8081
         subset: v1
-      weight: 100
-    mirror:
-      host: provider.springboot-cloud.svc.cluster.local
-      subset: gray
-    mirrorPercentage:
-      value: 100.0
+  - name: default
+    match:
+      - uri:
+          prefix: "/provider/"
+    rewrite:
+      uri: /
+    route:
+      - destination:
+          host: provider.springboot-cloud.svc.cluster.local
+          port:
+            number: 8081
+          subset: v1
