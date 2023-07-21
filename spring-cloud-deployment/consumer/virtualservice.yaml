@@ -14,8 +14,8 @@ spec:
     - uri:
         prefix: "/consumer/"
       headers:
-        grayid:
-          exact: canary
+        x-am-canary:
+          exact: "1"
     rewrite:
       uri: /
     route:
@@ -24,6 +24,21 @@ spec:
         port:
           number: 8083
         subset: gray
+  - name: base
+    match:
+      - uri:
+          prefix: "/consumer/"
+        headers:
+          x-am-canary:
+            exact: "0"
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: consumer.springboot-cloud.svc.cluster.local
+        port:
+          number: 8083
+        subset: v1
   - name: default
     match:
       - uri:

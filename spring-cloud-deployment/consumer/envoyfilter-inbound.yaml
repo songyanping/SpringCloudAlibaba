@@ -1,0 +1,82 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: consumer-header-filter
+  namespace: springboot-cloud
+spec:
+  workloadSelector:
+    labels:
+      app: consumer
+      version: gray
+  configPatches:
+    - applyTo: HTTP_FILTER
+      match:
+        context: SIDECAR_OUTBOUND
+        listener:
+          filterChain:
+            filter:
+              name: envoy.filters.network.http_connection_manager
+              subFilter:
+                name: envoy.filters.http.router
+      patch:
+        operation: INSERT_BEFORE
+        value:
+          name: envoy.filters.http.lua
+          typed_config:
+            '@type': type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
+            metadata_context_namespaces: # specify the metadata namespaces to fetch
+              - envoy.filters.http.router
+              - istio.io/metadata # this may contain k8s deploy labels
+            inlineCode: |
+              function envoy_on_request(request_handle)
+                request_handle:headers():add("grayid", "canary")
+                request_handle:logWarn("Path: "..request_handle:headers():get(":path"))
+                local body = request_handle:body()
+                if body ~= nil then
+                  request_handle:logWarn("body: "..body)
+                end
+                local metadata = request_handle:headers():get("x-envoy-peer-metadata")
+                request_handle:logWarn("value:"..metadata)
+              
+                local dyMeta = request_handle:streamInfo():dynamicMetadata()
+                local meta = request_handle:metadata()
+                if dyMeta ~= nil then
+                  request_handle:logWarn(tostring(dyMeta))
+                  for key, value in pairs(dyMeta) do
+                    request_handle:logWarn(key,value)
+                  end
+                end
+                if meta ~= nil then
+                  request_handle:logWarn(tostring(meta))
+                  for key, value in pairs(meta) do
+                    request_handle:logWarn(key,value)
+                  end
+                end 
+              end
+              function envoy_on_response(response_handle)
+                local response_code = response_handle:headers():get(":status")
+                if response_code == "503" then
+                 -- Remove the request header
+                  request_handle:headers():remove("grayid")
+              
+                -- Retry the request
+                  request_handle:httpCall()
+              end
+
+#            inlineCode: |
+#              function envoy_on_request(request_handle)
+#                request_handle:headers():add("grayid", "canary")
+#                local metadata = request_handle:headers():metadata()
+#                for key, value in pairs(metadata) do
+#                  request_handle:headers():add(key, value)
+#                end
+#                          local headers = request_handle:headers()
+#                          request_handle:logInfo("path: eng")
+#                          for k, v in pairs(headers) do
+#                          request_handle:logInfo("key: "..k)
+#                  request_handle:logInfo("value: "..v)
+#                end
+#              end
+#              function envoy_on_response(response_handle)
+#                response_handle:headers():add("test", "from envoy filter response")
+#              end
